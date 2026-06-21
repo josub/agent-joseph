@@ -1,0 +1,25 @@
+# Secrets — never commit
+.env
+.env.local
+*.local
+
+# Runtime control files
+.paused
+
+# Per-item claim locks (transient, runtime-only)
+work/**/.lock
+
+# Build spec / PRD — local reference only, never upload
+agent-brain-spec.md
+
+# OS / tooling cruft
+.DS_Store
+node_modules/
+
+# --- Tracked by default ---
+# work/archived/, memory/archive/, and memory/reports/ are committed so the
+# agent's provenance and digests survive. Uncomment below to stop tracking them
+# if they ever grow too large for the repo.
+# work/archived/
+# memory/archive/
+# memory/reports/
