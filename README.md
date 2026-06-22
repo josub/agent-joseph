@@ -30,9 +30,24 @@ work/           missions (persistent) · tasks · alerts · ongoing · completed
 skills/         innate/ (ships with every agent) + learned theme trees
 workflows/      reusable multi-stage procedures — ICM applies HERE ONLY
 routines/       active/ + inactive/ — trigger → skill bindings
-scripts/        run-routine.sh — CLI entry; honors .paused; cron/launchd opt-in
+scripts/        run-routine.sh (routine runner) · sync-claude-skills.sh (native exposure)
+.claude/skills/ generated symlinks that expose on-demand skills to Claude Code natively
 ```
 Read `CLAUDE.md` for the full map and the rules; each top folder has its own README.
+
+## A note on native skill invocation (`.claude/skills/`)
+Claude Code only auto-discovers skills under `.claude/skills/`, so the brain's own
+`skills/` are otherwise invokable only conversationally or via `run-routine.sh`. Running
+**`scripts/sync-claude-skills.sh`** symlinks **every skill** (innate *and* learned
+themes) into `.claude/skills/` (committed, so clones carry them) — making them appear in
+the harness skill list and invokable directly. The links are **relative**, so they
+resolve in a clone. Three things are deliberately excluded: inert **`draft_`** skills
+(guardrail 6 — gated until promoted), templates (`_*`), and the **scheduled anchors**
+(`sleep`, `morning-review`, `start-work-session`), which stay on the
+`run-routine.sh`/cron path so they aren't fired ad hoc. The script is idempotent and
+**`sleep` runs it nightly**, so promoted/new skills surface automatically and stale
+links (removed, drafted, or now-anchor skills) are pruned — you rarely need to run it by
+hand.
 
 ## A note on the demo
 `workflows/create-blog-post/` and the `skills/marketing/` theme it uses ship as a

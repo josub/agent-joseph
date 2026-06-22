@@ -1,6 +1,6 @@
 ---
 name: sleep
-description: The keystone nightly consolidation. Folds the day's working memory and completed work into long-term episodic + semantic memory, archives scratch and finished items, detects patterns into draft skills / inactive routines, prunes old scratch, rolls the report cycle, and writes a fresh sleep report. Idempotent. Runs at night; powernap invokes it on demand.
+description: The keystone nightly consolidation. Folds the day's working memory and completed work into long-term episodic + semantic memory, archives scratch and finished items, detects patterns into draft skills / inactive routines, prunes old scratch, refreshes native skill exposure (`.claude/skills/`), rolls the report cycle, and writes a fresh sleep report. Idempotent. Runs at night; powernap invokes it on demand.
 ---
 
 # sleep
@@ -40,7 +40,14 @@ Never author a workflow autonomously (v1 — guardrail 6). Log each proposal to 
 Delete `memory/archive/<date>/` folders older than **30 days**. (This is the one place
 the agent hard-deletes — only already-consolidated scratch past retention.)
 
-### 5. Roll reports + write the sleep report
+### 5. Refresh native skill exposure
+Run `scripts/sync-claude-skills.sh` to regenerate `.claude/skills/` — link any newly
+added on-demand skill, prune links for removed skills, and re-exclude any skill that
+became a routine anchor. Idempotent and non-consequential, so it is safe on unattended
+runs. It exposes **on-demand** skills only; `draft_`/inert skills are never exposed
+(guardrail 6).
+
+### 6. Roll reports + write the sleep report
 - If `memory/reports/latest/` still holds the **previous** cycle, move its files to
   `memory/reports/<its-cycle-date>/` — `<cycle-date>` is the date the reports
   themselves carry (local time at generation), **not** the clock now. If that dated
@@ -51,7 +58,7 @@ the agent hard-deletes — only already-consolidated scratch past retention.)
   flagged, and what's pending review (draft skills, new inactive routines, ideas).
 - Append a one-line summary to today's episodic.
 
-### 6. Idempotency
+### 7. Idempotency
 Items already archived are skipped (folder = state). An in-flight workflow run still in
 `work/ongoing/` is **left untouched** — only `completed/` is swept.
 
