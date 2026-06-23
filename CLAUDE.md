@@ -23,7 +23,7 @@ hard Rules). Current goals are **not** there; they live in `work/missions/`.
 | Procedural — abilities | `skills/` | `innate/` (ships) + learned themes. **No triggers.** |
 | Procedural — habits | `routines/` | trigger → skill bindings. `active/` vs `inactive/`. |
 | Procedural — multi-stage | `workflows/` | Reusable staged procedures. **ICM applies here only.** |
-| Native skill exposure | `.claude/skills/` | Generated symlinks so Claude Code sees the brain's skills (excl. `draft_`/anchors). Synced by `scripts/sync-claude-skills.sh` (nightly via `sleep`). |
+| Native skill exposure | `.claude/skills/` | Generated symlinks so Claude Code sees the brain's skills (excl. `draft_`/`_*` templates; anchors included). Synced by `scripts/sync-claude-skills.sh` (nightly via `sleep`). |
 | Scheduling entry | `scripts/run-routine.sh` | Honors `.paused`. Cron/launchd opt-in. |
 
 Three classes of procedural memory: **skills** (single abilities, no triggers),
@@ -95,10 +95,11 @@ and take **no** consequential or outbound action on their own — a human acts l
 - **`.claude/skills/` is generated, not authored** — it holds relative symlinks produced
   by `scripts/sync-claude-skills.sh` to expose the brain's skills (innate + learned) to
   Claude Code's native discovery. `skills/` stays the single source of truth. Excluded:
-  inert `draft_` skills (guardrail 6), templates (`_*`), and scheduled anchors (they stay
-  on the `run-routine.sh`/cron path). **`sleep` runs the sync nightly** (step 5), so
-  promoted/new skills surface and stale links are pruned automatically; never hand-edit
-  the links.
+  inert `draft_` skills (guardrail 6) and templates (`_*`). Scheduled anchors (`sleep`,
+  `morning-review`, `start-work-session`) **are** exposed — they keep running on the
+  `run-routine.sh`/cron path and can also be invoked manually. **`sleep` runs the sync
+  nightly** (step 5), so promoted/new skills surface and stale links are pruned
+  automatically; never hand-edit the links.
 - **ICM is scoped** — it governs `workflows/` only; the rest stays cyclic and native.
 - **Workflow definition ≠ run** — definition in `workflows/` (factory, stable); a run is
   a work item in `work/` (the product). Inputs are **pointers, not copies** (resolved by

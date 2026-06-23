@@ -42,10 +42,10 @@ the agent hard-deletes — only already-consolidated scratch past retention.)
 
 ### 5. Refresh native skill exposure
 Run `scripts/sync-claude-skills.sh` to regenerate `.claude/skills/` — link any newly
-added on-demand skill, prune links for removed skills, and re-exclude any skill that
-became a routine anchor. Idempotent and non-consequential, so it is safe on unattended
-runs. It exposes **on-demand** skills only; `draft_`/inert skills are never exposed
-(guardrail 6).
+added skill and prune links for removed skills. Idempotent and non-consequential, so it
+is safe on unattended runs. It exposes every skill (innate + learned, including the
+scheduled anchors so they can be invoked manually); `draft_`/inert skills and `_*`
+templates are never exposed (guardrail 6).
 
 ### 6. Roll reports + write the sleep report
 - If `memory/reports/latest/` still holds the **previous** cycle, move its files to

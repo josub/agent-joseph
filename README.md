@@ -41,13 +41,12 @@ Claude Code only auto-discovers skills under `.claude/skills/`, so the brain's o
 **`scripts/sync-claude-skills.sh`** symlinks **every skill** (innate *and* learned
 themes) into `.claude/skills/` (committed, so clones carry them) — making them appear in
 the harness skill list and invokable directly. The links are **relative**, so they
-resolve in a clone. Three things are deliberately excluded: inert **`draft_`** skills
-(guardrail 6 — gated until promoted), templates (`_*`), and the **scheduled anchors**
-(`sleep`, `morning-review`, `start-work-session`), which stay on the
-`run-routine.sh`/cron path so they aren't fired ad hoc. The script is idempotent and
-**`sleep` runs it nightly**, so promoted/new skills surface automatically and stale
-links (removed, drafted, or now-anchor skills) are pruned — you rarely need to run it by
-hand.
+resolve in a clone. Two things are deliberately excluded: inert **`draft_`** skills
+(guardrail 6 — gated until promoted) and templates (`_*`). The **scheduled anchors**
+(`sleep`, `morning-review`, `start-work-session`) **are** exposed — they keep running on
+the `run-routine.sh`/cron path and can also be invoked manually. The script is idempotent
+and **`sleep` runs it nightly**, so promoted/new skills surface automatically and stale
+links (removed or drafted skills) are pruned — you rarely need to run it by hand.
 
 ## A note on the demo
 `workflows/create-blog-post/` and the `skills/marketing/` theme it uses ship as a

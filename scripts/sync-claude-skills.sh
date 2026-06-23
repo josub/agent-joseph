@@ -12,13 +12,13 @@
 # Scope: every skill under skills/ (innate AND learned themes), EXCEPT:
 #   - draft_*  — inert/gated until promoted (guardrail 6); never exposed.
 #   - _*       — templates and scaffolding (e.g. skills/_TEMPLATE).
-#   - scheduled anchors — skills bound to an *active* routine (sleep, morning-review,
-#     start-work-session). They stay on the run-routine.sh/cron path and are NOT fired
-#     ad hoc. Anchors are detected dynamically from `runs:` in routines/active/*.md, so
-#     activating a routine auto-un-exposes its skill on the next sync.
+#
+# Scheduled anchors (sleep, morning-review, start-work-session) ARE exposed: they keep
+# running via the run-routine.sh/cron path AND can be invoked manually through Claude
+# Code's native discovery.
 #
 # Idempotent: safe to re-run. Refreshes links, picks up newly added/promoted skills,
-# and prunes links that no longer belong (skill removed, drafted, or became an anchor).
+# and prunes links that no longer belong (skill removed or drafted).
 # This is why `sleep` runs it nightly — so both changes and new skills stay in sync.
 #
 # Portable to macOS's stock bash 3.2 (no associative arrays).
@@ -36,17 +36,6 @@ DEST_DIR=".claude/skills"
 
 mkdir -p "$DEST_DIR"
 
-# --- Anchors = skills bound to an ACTIVE routine (scheduled; excluded) ---
-# Collected as a space-padded string " a b c " for portable membership tests.
-ANCHORS=" "
-if compgen -G "routines/active/*.md" > /dev/null; then
-  while IFS= read -r runs_path; do
-    [[ -n "$runs_path" ]] || continue
-    ANCHORS+="$(basename "$runs_path") "
-  done < <(grep -hE '^[[:space:]]*runs:[[:space:]]*' routines/active/*.md \
-             | sed -E 's/^[[:space:]]*runs:[[:space:]]*//; s/[[:space:]]+$//')
-fi
-
 # --- Create / refresh relative symlinks for every eligible skill ---
 DESIRED=" "
 linked=0
@@ -58,7 +47,6 @@ while IFS= read -r skill_md; do
     draft_*) continue ;;                    # inert/gated — never expose
     _*)      continue ;;                    # templates/scaffolding
   esac
-  [[ "$ANCHORS" == *" $name "* ]] && continue   # scheduled anchor
 
   if [[ "$DESIRED" == *" $name "* ]]; then
     echo "[sync-claude-skills] WARNING: duplicate skill name '$name' ($skill_dir) — keeping first, skipping this one." >&2
@@ -72,7 +60,7 @@ while IFS= read -r skill_md; do
   linked=$((linked + 1))
 done < <(find "$SKILLS_DIR" -type f -name SKILL.md | sort)
 
-# --- Prune symlinks that no longer belong (removed, drafted, now-anchor, or broken) ---
+# --- Prune symlinks that no longer belong (removed, drafted, or broken) ---
 pruned=0
 for link in "$DEST_DIR"/*; do
   [[ -L "$link" ]] || continue              # only touch our symlinks
@@ -84,5 +72,3 @@ for link in "$DEST_DIR"/*; do
 done
 
 echo "[sync-claude-skills] linked ${linked} skill(s) into ${DEST_DIR}; pruned ${pruned} stale link(s)."
-anchors_trim="$(printf '%s' "$ANCHORS" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')"
-[[ -n "$anchors_trim" ]] && echo "[sync-claude-skills] excluded scheduled anchors: ${anchors_trim}"
