@@ -35,7 +35,16 @@ a `.lock`. *(Optionally check external sources read-only here and file new alert
    (e.g. `agent-joe`, or `hostname:pid`), `claimed_at: <ISO 8601>`.
 3. Move the whole folder to `work/ongoing/<id>/` (any `references/` travel with it).
 
-### 4. Route the claimed item
+### 4. Prime from memory (recall)
+Before executing the claimed item, invoke the `recall` skill
+(`skills/innate/recall/SKILL.md`) on the item's topic to surface what the brain already
+knows — relevant semantic concepts, today's working notes, and (on demand) prior episodic
+decisions. Carry the returned resources into execution so work doesn't start cold.
+Applies whether the item routes to in-session work, a fresh workflow run, or a resumed
+continue-task. Read-only, so it's safe on the cron pass — though a pure staging pass that
+defers execution to a human can skip it.
+
+### 5. Route the claimed item
 - **(a) Workflow continue-task** — frontmatter has `workflow:` / `run:` / `stage:` →
   **resume** that run: execute the named stage per its contract (read Inputs, apply
   Process, write Outputs, run Verify — see `workflows/README.md`), then advance per the
@@ -49,7 +58,7 @@ a `.lock`. *(Optionally check external sources read-only here and file new alert
     **suggest `workflow-creator`**. **If unsure whether it qualifies, ask the user.**
   - **Otherwise** (single-cycle, or one-off) → just do the task in-session.
 
-### 5. Losing the claim
+### 6. Losing the claim
 If the `.lock` create fails, another agent took it between selection and claim. The
 loser never moves the folder, and recovers by who made the choice:
 - **Agent chose** (agent-prioritizes / do-all): silently drop it and claim the
@@ -59,7 +68,7 @@ loser never moves the folder, and recovers by who made the choice:
   it was just claimed (by whom + when, read from the content file's frontmatter) and
   re-present the now-current available list to pick again.
 
-### 6. Report
+### 7. Report
 Report what was started / the prioritized plan.
 
 ## Notes
