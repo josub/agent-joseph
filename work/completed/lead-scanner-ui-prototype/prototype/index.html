@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Tessera — lead scanner prototype</title>
+
+<!-- Fonts: Newsreader (Tiempos-adjacent serif display) + Inter (humanist sans body/UI) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+
+<!-- Tailwind Play CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          // Surfaces (DESIGN-claude.md)
+          canvas: '#faf9f5', 'surface-soft': '#f5f0e8', card: '#efe9de', 'cream-strong': '#e8e0d2',
+          dark: '#181715', 'dark-elev': '#252320', 'dark-soft': '#1f1e1b',
+          // Text
+          ink: '#141413', body: '#3d3d3a', 'body-strong': '#252523', muted: '#6c6a64', 'muted-soft': '#8e8b82',
+          // Brand
+          coral: '#cc785c', 'coral-active': '#a9583e', 'coral-disabled': '#e6dfd8',
+          hairline: '#e6dfd8', 'hairline-soft': '#ebe6df',
+          'on-dark': '#faf9f5', 'on-dark-soft': '#a09d96',
+          // Semantic / companions
+          teal: '#5db8a6', amber: '#e8a55a', success: '#5db872', warning: '#d4a017', error: '#c64545',
+        },
+        fontFamily: {
+          serif: ['Newsreader', 'Tiempos Headline', 'Georgia', 'serif'],
+          sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html, body { height: 100%; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Newsreader', 'Tiempos Headline', Georgia, serif; }
+  .display-tight { letter-spacing: -0.02em; }
+  /* hide scrollbars on the in-app scroll regions, keep scrollability */
+  .no-bar::-webkit-scrollbar { width: 0; height: 0; }
+  .no-bar { scrollbar-width: none; }
+
+  /* Motion lives only when the user allows it (prefers-reduced-motion respected) */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes scanpulse {
+      0%   { transform: scale(1);    opacity: 0.5; }
+      70%  { transform: scale(1.9);  opacity: 0;   }
+      100% { transform: scale(1.9);  opacity: 0;   }
+    }
+    @keyframes sweep {
+      0%   { transform: translateY(-130%); opacity: 0; }
+      15%  { opacity: 1; }
+      85%  { opacity: 1; }
+      100% { transform: translateY(130%);  opacity: 0; }
+    }
+    @keyframes sheetup {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes toastin { from { transform: translateY(140%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes screenin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .anim-pulse  { animation: scanpulse 2.6s ease-out infinite; }
+    .anim-pulse-2{ animation: scanpulse 2.6s ease-out 1.3s infinite; }
+    .anim-sweep  { animation: sweep 2.6s ease-in-out infinite; }
+    .anim-sheet  { animation: sheetup 0.34s cubic-bezier(0.22,1,0.36,1); }
+    .anim-fade   { animation: fadein 0.3s ease-out; }
+    .anim-toast  { animation: toastin 0.28s cubic-bezier(0.22,1,0.36,1); }
+    .anim-screen { animation: screenin 0.32s ease-out; }
+  }
+</style>
+</head>
+<body class="bg-cream-strong">
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="application/x-jsx" id="app-src">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    /* ---------------------------------------------------------------- icons */
+    const Burst = ({ className = 'w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="none"
+           stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+        {[0,45,90,135].map(a => (
+          <line key={a} x1="12" y1="3.5" x2="12" y2="20.5"
+                transform={`rotate(${a} 12 12)`} />
+        ))}
+      </svg>
+    );
+    const Camera = ({ className='w-6 h-6' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.2l.9-1.4A1.5 1.5 0 0 1 8.9 4h6.2a1.5 1.5 0 0 1 1.3.7L17.3 6h1.2A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"/>
+        <circle cx="12" cy="12.3" r="3.4"/>
+      </svg>
+    );
+    const Close = ({ className='w-6 h-6' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    );
+    const Back = ({ className='w-6 h-6' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    );
+    const Chevron = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    );
+    const Mail = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>
+    );
+    const LinkedIn = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+        <path d="M6.94 8.5H4.13V19h2.81zM5.53 4.2a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26M19.88 19v-5.77c0-2.99-1.6-4.38-3.73-4.38a3.22 3.22 0 0 0-2.92 1.6h-.04V8.5H10.5V19h2.81v-5.2c0-1.37.26-2.7 1.96-2.7s1.7 1.57 1.7 2.79V19z"/>
+      </svg>
+    );
+    const Hash = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+        <path d="M9 4L7 20M17 4l-2 16M5 9h15M4 15h15"/></svg>
+    );
+    const Sprocket = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="12" cy="13.5" r="3.2"/><circle cx="18.5" cy="6" r="2"/>
+        <path d="M12 10.3V6.5M14.2 11.5l2.9-3.9"/></svg>
+    );
+    const Check = ({ className='w-5 h-5' }) => (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor"
+           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    );
+    const Spinner = ({ className='w-6 h-6' }) => (
+      <svg viewBox="0 0 24 24" className={className + ' motion-safe:animate-spin'} fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2.4"/>
+        <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/></svg>
+    );
+
+    /* ------------------------------------------------------------- badge art
+       A drawn event badge — the "thing being scanned". Self-contained (no images). */
+    const BadgeArt = ({ lead, className = '' }) => (
+      <svg viewBox="0 0 300 400" className={className} role="img"
+           aria-label={`Event badge for ${lead.first} ${lead.last}`}>
+        <rect x="0" y="0" width="300" height="400" rx="18" fill="#faf9f5" />
+        <rect x="0.75" y="0.75" width="298.5" height="398.5" rx="17.25" fill="none" stroke="#e6dfd8" strokeWidth="1.5"/>
+        {/* lanyard slot */}
+        <rect x="120" y="20" width="60" height="11" rx="5.5" fill="#e8e0d2" />
+        {/* event ribbon */}
+        <rect x="24" y="52" width="252" height="34" rx="8" fill="#cc785c" />
+        <text x="150" y="74" textAnchor="middle" fill="#ffffff" fontFamily="Inter, sans-serif"
+              fontSize="15" fontWeight="600" letterSpacing="2.5">ROBOSUMMIT &#39;26</text>
+        {/* name */}
+        <text x="28" y="168" fill="#6c6a64" fontFamily="Inter, sans-serif" fontSize="12"
+              letterSpacing="2.5" fontWeight="500">ATTENDEE</text>
+        <text x="26" y="212" fill="#141413" fontFamily="Newsreader, Georgia, serif" fontSize="40">{lead.first}</text>
+        <text x="26" y="252" fill="#141413" fontFamily="Newsreader, Georgia, serif" fontSize="40">{lead.last}</text>
+        <text x="28" y="288" fill="#3d3d3a" fontFamily="Inter, sans-serif" fontSize="15" fontWeight="500">{lead.company}</text>
+        <text x="28" y="310" fill="#6c6a64" fontFamily="Inter, sans-serif" fontSize="13">{lead.title}</text>
+        {/* QR-ish block */}
+        <g transform="translate(28,330)" fill="#181715">
+          {[
+            '11101','10001','10101','10001','11101'
+          ].map((row, r) => row.split('').map((c, k) =>
+            c === '1' ? <rect key={r+'-'+k} x={k*9} y={r*9} width="8" height="8" rx="1"/> : null
+          ))}
+        </g>
+        <text x="276" y="372" textAnchor="end" fill="#8e8b82" fontFamily="Inter, sans-serif"
+              fontSize="11" letterSpacing="1.5">HALL B · BOOTH 214</text>
+      </svg>
+    );
+
+    /* ----------------------------------------------------------------- data */
+    const SAMPLE_LEADS = [
+      { first:'Mara',  last:'Okonkwo',    company:'Vellum Robotics', title:'VP of Partnerships',
+        email:'mara.okonkwo@vellumrobotics.com', phone:'+1 (415) 555-0142', linkedin:'linkedin.com/in/maraokonkwo' },
+      { first:'Theo',  last:'Bergström',  company:'Northwind Labs',  title:'Staff ML Engineer',
+        email:'theo@northwindlabs.io',           phone:'+1 (206) 555-0188', linkedin:'linkedin.com/in/theobergstrom' },
+      { first:'Priya', last:'Nair',       company:'Lattice Forge',   title:'Head of Developer Relations',
+        email:'priya.nair@latticeforge.dev',     phone:'+1 (512) 555-0173', linkedin:'linkedin.com/in/priyanair' },
+    ];
+    const initials = (l) => (l.first[0] + l.last[0]).toUpperCase();
+
+    const FIELDS = [
+      { key:'company',  label:'Company',  type:'text',  full:true },
+      { key:'title',    label:'Title',    type:'text',  full:true },
+      { key:'email',    label:'Email',    type:'email', full:true, mono:true },
+      { key:'phone',    label:'Phone',    type:'tel',   full:true },
+      { key:'linkedin', label:'LinkedIn', type:'text',  full:true, mono:true },
+    ];
+
+    /* ----------------------------------------------------- shared UI pieces */
+    const Eyebrow = ({ children, className='' }) => (
+      <p className={'text-[11px] font-medium uppercase tracking-[0.18em] text-muted ' + className}>{children}</p>
+    );
+
+    const focusRing = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2';
+
+    /* ---------------------------------------------------------- Scan screen */
+    const HomeScreen = ({ onScan, count, lastLead, onOpenLast }) => (
+      <main className="anim-screen absolute inset-0 flex flex-col bg-canvas">
+        <header className="flex items-center justify-between px-6 pt-6">
+          <div className="flex items-center gap-2 text-ink">
+            <Burst className="w-5 h-5 text-coral" />
+            <span className="font-display text-[19px] display-tight">Tessera</span>
+          </div>
+          <span className="rounded-full bg-card px-3 py-1 text-[12px] font-medium text-body">
+            {count} leads · RoboSummit&nbsp;&rsquo;26
+          </span>
+        </header>
+
+        <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+          <Eyebrow>Lead capture</Eyebrow>
+          <h1 className="font-display display-tight mt-3 text-[40px] leading-[1.06] text-ink">
+            Scan a badge,<br/>keep the lead.
+          </h1>
+
+          {/* Signature element: the scan orb */}
+          <div className="relative mt-12 mb-10 flex h-[230px] w-[230px] items-center justify-center">
+            <span className="anim-pulse pointer-events-none absolute h-[200px] w-[200px] rounded-full bg-coral/15" />
+            <span className="anim-pulse-2 pointer-events-none absolute h-[200px] w-[200px] rounded-full bg-coral/15" />
+            <button
+              onClick={onScan}
+              aria-label="Scan a badge"
+              className={'group relative h-[200px] w-[200px] overflow-hidden rounded-full bg-coral text-on-dark shadow-[0_18px_40px_-12px_rgba(204,120,92,0.7)] transition active:scale-[0.97] ' + focusRing}>
+              {/* faint badge silhouette + scanning sweep, specific to a badge scanner */}
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-25">
+                <span className="h-[108px] w-[80px] rounded-md border-2 border-white" />
+              </span>
+              <span className="anim-sweep pointer-events-none absolute inset-x-6 top-1/2 h-[2px] bg-white/80 shadow-[0_0_12px_2px_rgba(255,255,255,0.6)]" />
+              <span className="relative flex flex-col items-center gap-1">
+                <Camera className="w-8 h-8" />
+                <span className="text-[24px] font-semibold tracking-wide">Scan</span>
+              </span>
+            </button>
+          </div>
+
+          <p className="max-w-[15rem] text-[14px] leading-relaxed text-muted">
+            Point your camera at an event badge or business card.
+          </p>
+        </div>
+
+        <div className="px-6 pb-7">
+          {lastLead ? (
+            <button onClick={onOpenLast}
+              className={'flex w-full items-center gap-3 rounded-xl border border-hairline bg-canvas px-4 py-3 text-left transition hover:bg-card ' + focusRing}>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card text-[12px] font-semibold text-ink">{initials(lastLead)}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] uppercase tracking-[0.16em] text-muted">Last saved</span>
+                <span className="block truncate text-[14px] font-medium text-ink">{lastLead.first} {lastLead.last} · {lastLead.company}</span>
+              </span>
+              <Chevron className="w-5 h-5 text-muted-soft" />
+            </button>
+          ) : (
+            <p className="rounded-xl border border-dashed border-hairline px-4 py-3 text-center text-[13px] text-muted">
+              No leads yet — scan your first badge.
+            </p>
+          )}
+        </div>
+      </main>
+    );
+
+    /* -------------------------------------------------------- Camera screen */
+    const CameraScreen = ({ lead, onClose, onCaptured }) => {
+      const videoRef = useRef(null);
+      const [reading, setReading] = useState(false);
+
+      useEffect(() => {
+        let stream;
+        (async () => {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            if (videoRef.current) { videoRef.current.srcObject = stream; }
+          } catch (e) { /* no camera / denied — the drawn badge stands in */ }
+        })();
+        return () => { if (stream) stream.getTracks().forEach(t => t.stop()); };
+      }, []);
+
+      const capture = () => {
+        if (reading) return;
+        setReading(true);
+        setTimeout(onCaptured, 1100); // simulate OCR read
+      };
+
+      return (
+        <main className="anim-fade absolute inset-0 flex flex-col bg-dark text-on-dark">
+          <video ref={videoRef} autoPlay playsInline muted
+                 className="absolute inset-0 h-full w-full object-cover opacity-30" />
+          <div className="absolute inset-0 bg-dark/40" />
+
+          <header className="relative flex items-center justify-between px-5 pt-6">
+            <button onClick={onClose} aria-label="Close camera"
+              className={'flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-on-dark transition active:scale-95 ' + focusRing}>
+              <Close className="w-6 h-6" />
+            </button>
+            <span className="text-[13px] font-medium uppercase tracking-[0.18em] text-on-dark-soft">Scanning</span>
+            <span className="w-11" />
+          </header>
+
+          <div className="relative flex flex-1 flex-col items-center justify-center px-8">
+            {/* reticle */}
+            <div className="relative w-[230px]">
+              <div className="overflow-hidden rounded-2xl shadow-2xl">
+                <BadgeArt lead={lead} className="block w-full" />
+              </div>
+              {/* corner ticks */}
+              {['-top-1 -left-1 border-l-2 border-t-2 rounded-tl-xl',
+                '-top-1 -right-1 border-r-2 border-t-2 rounded-tr-xl',
+                '-bottom-1 -left-1 border-l-2 border-b-2 rounded-bl-xl',
+                '-bottom-1 -right-1 border-r-2 border-b-2 rounded-br-xl'
+              ].map((c,i) => <span key={i} className={'absolute h-7 w-7 border-coral ' + c} />)}
+              {!reading && <span className="anim-sweep pointer-events-none absolute inset-x-2 top-1/2 h-[2px] bg-coral shadow-[0_0_14px_3px_rgba(204,120,92,0.7)]" />}
+            </div>
+
+            <p className="mt-7 h-5 text-[14px] text-on-dark-soft">
+              {reading ? 'Reading badge…' : 'Align the badge inside the frame'}
+            </p>
+          </div>
+
+          <div className="relative flex flex-col items-center pb-10">
+            <button onClick={capture} disabled={reading} aria-label="Capture badge"
+              className={'flex h-[74px] w-[74px] items-center justify-center rounded-full bg-white/15 ring-2 ring-white/70 transition active:scale-95 disabled:opacity-70 ' + focusRing}>
+              {reading
+                ? <Spinner className="w-7 h-7 text-on-dark" />
+                : <span className="h-[58px] w-[58px] rounded-full bg-on-dark" />}
+            </button>
+          </div>
+        </main>
+      );
+    };
+
+    /* -------------------------------------------------------- Review screen */
+    const Field = ({ f, value, onChange }) => (
+      <label className={f.full ? 'block' : ''}>
+        <span className="mb-1.5 block text-[12px] font-medium text-muted">{f.label}</span>
+        <input
+          type={f.type} value={value} inputMode={f.type==='tel'?'tel':f.type==='email'?'email':'text'}
+          onChange={(e) => onChange(f.key, e.target.value)}
+          className={'h-11 w-full rounded-lg border border-hairline bg-canvas px-3.5 text-[15px] text-ink transition placeholder:text-muted-soft focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/25 '
+            + (f.mono ? 'tracking-tight' : '')} />
+      </label>
+    );
+
+    const ReviewScreen = ({ lead, setLead, onBack, onConfirm, badgeLead }) => {
+      const update = (k, v) => setLead(prev => ({ ...prev, [k]: v }));
+      return (
+        <main className="anim-screen absolute inset-0 flex flex-col bg-canvas">
+          <header className="flex items-center gap-3 border-b border-hairline-soft px-4 py-4">
+            <button onClick={onBack} aria-label="Back"
+              className={'flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-card ' + focusRing}>
+              <Back className="w-6 h-6" />
+            </button>
+            <h1 className="font-display display-tight text-[22px] text-ink">Review contact</h1>
+          </header>
+
+          <div className="no-bar flex-1 overflow-y-auto px-5 pb-32 pt-5">
+            {/* scanned thumbnail */}
+            <div className="mb-6 flex items-center gap-4">
+              <div className="h-20 w-[60px] shrink-0 overflow-hidden rounded-lg border border-hairline shadow-sm">
+                <BadgeArt lead={badgeLead} className="block h-full w-full object-cover" />
+              </div>
+              <div>
+                <Eyebrow>Scanned badge</Eyebrow>
+                <p className="mt-1 text-[13px] text-muted">Check the details below, then confirm. Tap any field to fix it.</p>
+              </div>
+            </div>
+
+            {/* name row */}
+            <div className="mb-4 grid grid-cols-2 gap-3">
+              <Field f={{key:'first',label:'First name',type:'text'}} value={lead.first} onChange={update} />
+              <Field f={{key:'last',label:'Last name',type:'text'}}   value={lead.last}  onChange={update} />
+            </div>
+            <div className="space-y-4">
+              {FIELDS.map(f => <Field key={f.key} f={f} value={lead[f.key]} onChange={update} />)}
+            </div>
+          </div>
+
+          {/* floating confirm */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-canvas via-canvas to-transparent px-5 pb-7 pt-10">
+            <button onClick={onConfirm}
+              className={'pointer-events-auto flex h-14 w-full items-center justify-center rounded-xl bg-coral-active text-[16px] font-semibold text-on-dark shadow-[0_12px_28px_-8px_rgba(169,88,62,0.65)] transition active:scale-[0.99] hover:bg-[#8f4a33] ' + focusRing}>
+              Confirm contact
+            </button>
+          </div>
+        </main>
+      );
+    };
+
+    /* ---------------------------------------------------- Options bottom sheet */
+    const OptionRow = ({ icon, label, sub, done, doneLabel, onClick }) => (
+      <button onClick={onClick} disabled={done}
+        className={'flex w-full items-center gap-3.5 rounded-xl border border-hairline bg-canvas px-4 py-3.5 text-left transition active:scale-[0.99] disabled:opacity-100 enabled:hover:bg-card ' + focusRing}>
+        <span className={'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ' + (done ? 'bg-success/15 text-success' : 'bg-card text-ink')}>
+          {done ? <Check className="w-5 h-5" /> : icon}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-medium text-ink">{label}</span>
+          <span className="block truncate text-[12.5px] text-muted">{done ? doneLabel : sub}</span>
+        </span>
+        {!done && <Chevron className="w-5 h-5 text-muted-soft" />}
+      </button>
+    );
+
+    const OptionsSheet = ({ lead, onDone, onAction, completed }) => {
+      const ref = useRef(null);
+      useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Escape') onDone(); };
+        window.addEventListener('keydown', onKey);
+        ref.current && ref.current.focus();
+        return () => window.removeEventListener('keydown', onKey);
+      }, [onDone]);
+
+      return (
+        <div className="absolute inset-0 z-20 flex flex-col justify-end">
+          <div className="anim-fade absolute inset-0 bg-ink/40" onClick={onDone} aria-hidden="true" />
+          <section ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-label="Saved — what next"
+            className="anim-sheet relative max-h-[92%] overflow-y-auto no-bar rounded-t-3xl bg-canvas px-6 pb-7 pt-3 shadow-2xl focus:outline-none">
+            <div className="mx-auto mb-5 h-1.5 w-11 rounded-full bg-hairline" />
+
+            <div className="mb-6 flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-coral/12 text-[15px] font-semibold text-coral-active">{initials(lead)}</span>
+              <div>
+                <h2 className="font-display display-tight text-[24px] leading-none text-ink">Saved.</h2>
+                <p className="mt-1 text-[13.5px] text-muted">{lead.first} {lead.last} · {lead.company}</p>
+              </div>
+            </div>
+
+            <Eyebrow className="mb-2.5">Reach out</Eyebrow>
+            <div className="space-y-2.5">
+              <OptionRow icon={<Mail className="w-5 h-5" />}     label="Send quick email greeting" sub="Open a warm intro draft"
+                done={completed.has('email')} doneLabel="Draft ready in your outbox" onClick={() => onAction('email')} />
+              <OptionRow icon={<LinkedIn className="w-5 h-5" />} label="Connect on LinkedIn" sub="Queue a connection request"
+                done={completed.has('linkedin')} doneLabel="Invite queued for review" onClick={() => onAction('linkedin')} />
+            </div>
+
+            <Eyebrow className="mb-2.5 mt-6">Save to</Eyebrow>
+            <div className="space-y-2.5">
+              <OptionRow icon={<Hash className="w-5 h-5" />}     label="Send to Slack" sub="Post to #leads"
+                done={completed.has('slack')} doneLabel="Posted to #leads" onClick={() => onAction('slack')} />
+              <OptionRow icon={<Sprocket className="w-5 h-5" />} label="Send to HubSpot" sub="Create a new contact"
+                done={completed.has('hubspot')} doneLabel="Added to HubSpot" onClick={() => onAction('hubspot')} />
+            </div>
+
+            <button onClick={onDone}
+              className={'mt-7 flex h-14 w-full items-center justify-center rounded-xl bg-coral-active text-[16px] font-semibold text-on-dark transition active:scale-[0.99] hover:bg-[#8f4a33] ' + focusRing}>
+              Done
+            </button>
+          </section>
+        </div>
+      );
+    };
+
+    /* ----------------------------------------------------------------- toast */
+    const Toast = ({ msg }) => (
+      <div className="anim-toast absolute bottom-6 left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-full bg-ink px-4 py-2.5 text-[13px] font-medium text-on-dark shadow-xl">
+        <span className="inline-flex items-center gap-2"><Check className="w-4 h-4 text-success" />{msg}</span>
+      </div>
+    );
+
+    /* ------------------------------------------------------------------- app */
+    const ACTION_TOAST = {
+      email:    'Email greeting drafted',
+      linkedin: 'LinkedIn invite queued',
+      slack:    'Posted to #leads in Slack',
+      hubspot:  'Contact added to HubSpot',
+    };
+
+    function App() {
+      const [screen, setScreen]   = useState('home');         // home | camera | review
+      const [sheet, setSheet]     = useState(false);
+      const [lead, setLead]       = useState(null);           // editable working copy
+      const [badgeLead, setBadge] = useState(SAMPLE_LEADS[0]);// what the scan "saw"
+      const [count, setCount]     = useState(11);
+      const [lastLead, setLast]   = useState({ first:'Devin', last:'Park', company:'Northwind Labs',
+        title:'Principal Engineer', email:'devin.park@northwindlabs.io', phone:'+1 (503) 555-0119', linkedin:'linkedin.com/in/devinpark' });
+      const [completed, setCompleted] = useState(new Set());
+      const [toast, setToast]     = useState(null);
+      const cycle = useRef(0);
+
+      useEffect(() => {
+        if (!toast) return;
+        const t = setTimeout(() => setToast(null), 2200);
+        return () => clearTimeout(t);
+      }, [toast]);
+
+      const startScan = () => {
+        const next = SAMPLE_LEADS[cycle.current % SAMPLE_LEADS.length];
+        cycle.current += 1;
+        setBadge(next);
+        setScreen('camera');
+      };
+      const onCaptured = () => { setLead({ ...badgeLead }); setScreen('review'); };
+      const confirm = () => { setCompleted(new Set()); setSheet(true); };
+      const action = useCallback((k) => {
+        setCompleted(prev => new Set(prev).add(k));
+        setToast(ACTION_TOAST[k]);
+      }, []);
+      const done = () => {
+        setLast({ ...lead });
+        setCount(c => c + 1);
+        setSheet(false); setLead(null); setScreen('home');
+      };
+      const openLast = () => { setBadge(lastLead); setLead({ ...lastLead }); setScreen('review'); };
+
+      return (
+        <div className="flex min-h-[100svh] w-full items-center justify-center sm:p-6">
+          {/* device shell */}
+          <div className="relative h-[100svh] w-full max-w-[400px] overflow-hidden bg-canvas sm:h-[824px] sm:rounded-[2.4rem] sm:shadow-2xl sm:ring-1 sm:ring-hairline">
+            {screen === 'home' &&
+              <HomeScreen onScan={startScan} count={count} lastLead={lastLead} onOpenLast={openLast} />}
+            {screen === 'camera' &&
+              <CameraScreen lead={badgeLead} onClose={() => setScreen('home')} onCaptured={onCaptured} />}
+            {screen === 'review' && lead &&
+              <ReviewScreen lead={lead} setLead={setLead} badgeLead={badgeLead}
+                onBack={() => setScreen('home')} onConfirm={confirm} />}
+            {sheet && lead &&
+              <OptionsSheet lead={lead} completed={completed} onAction={action} onDone={done} />}
+            {toast && <Toast msg={toast} />}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+
+  <!-- Compile the JSX above with the classic runtime (React.createElement), then run it. -->
+  <script>
+    (function () {
+      var src = document.getElementById('app-src').textContent;
+      var out = Babel.transform(src, { presets: [['react', { runtime: 'classic' }]] }).code;
+      (0, eval)(out);
+    })();
+  </script>
+</body>
+</html>
