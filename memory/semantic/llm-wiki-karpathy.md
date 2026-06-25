@@ -41,7 +41,7 @@ articulation of our own brain's design.
 - [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
 - [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
 - [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md)
-- [[No log.md — our stance]](no-logmd-stance.md) — we diverge from Karpathy's `log.md`.
+- [[log.md — our stance (resolved)]](no-logmd-stance.md) — we adopted Karpathy's wiki-level `log.md` (see [[Semantic Wiki — changelog]](log.md)).
 
 ## History
 - 2026-06-22 — Created from working note `2026-06-22-karpathy-llm-wiki.md` during powernap.

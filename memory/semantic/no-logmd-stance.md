@@ -1,38 +1,54 @@
 ---
 type: convention
-title: No log.md — our stance
-description: We deliberately omit the per-folder append-only log.md that Karpathy's LLM wiki and Google's OKF both bless; episodic/ is the dated log, reports/ are the digests.
-tags: [convention, design-rationale, memory, divergence]
-source: CLAUDE.md ("No log.md"); contrasted with llm-wiki-karpathy + open-knowledge-format
+title: log.md — our stance (resolved: wiki-level log.md adopted)
+description: We initially omitted log.md entirely; resolved 2026-06-24 to adopt a single wiki-level log.md (memory/semantic/log.md, Karpathy-style) as the knowledge-base changelog. episodic/ + reports/ are unchanged.
+tags: [convention, design-rationale, memory, resolved]
+source: CLAUDE.md; contrasted with llm-wiki-karpathy + open-knowledge-format; resolved by user decision 2026-06-24
 created: 2026-06-22
-updated: 2026-06-22
+updated: 2026-06-24
 ---
 
-# No log.md — our stance
+# log.md — our stance (resolved)
 
-Our CLAUDE.md states the convention plainly: **"No `log.md`."** Chronological history
-lives in `memory/episodic/` (raw dated log / audit, append-only) and synthesized history
-lives in `memory/reports/` (daily digests). We do not keep a per-folder `log.md`.
+**Current stance:** we keep a single **wiki-level** `log.md` at
+[memory/semantic/log.md](log.md) — an append-only, machine-parseable changelog of the
+knowledge base, in Karpathy's LLM-wiki style (`## [date] action | Title`). We do **not**
+keep a `log.md` in every folder. The brain's whole-life audit (`memory/episodic/`) and
+synthesized digests (`memory/reports/`) are unchanged and serve different jobs.
+
+## How the three records divide
+- **`memory/semantic/log.md`** — *changelog of the knowledge base*: what page was
+  ingested / updated / superseded, and when. Reconstructs "what the brain learned, when"
+  in one machine-readable file.
+- **`memory/episodic/<date>.md`** — *whole-life audit*: everything the agent did (worked
+  tasks, sent drafts, ran routines), not just knowledge events.
+- **`memory/reports/`** — *synthesized digests*: the human-readable daily summary.
 
 ## Key points
-- **The tension:** two authoritative external patterns both bless a per-folder append-only
-  `log.md` — [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md) (with
-  machine-parseable prefixes like `## [2026-04-02] ingest | Title`) and
-  [[Open Knowledge Format (OKF)]](open-knowledge-format.md) (lists `log.md` as an optional
-  file). We diverge from both.
-- **Why we diverge:** we separate raw audit (`episodic/`, dated) from synthesized digest
-  (`reports/`) at the *brain* level rather than scattering a log inside every folder. One
-  audit trail, one digest stream — not N per-folder logs.
-- **When this matters:** if we ever claim OKF compatibility or want to interoperate with
-  an LLM-wiki-style consumer, the missing `log.md` is the most likely friction point. A
-  deliberate decision would be needed then — either an export shim that renders `episodic/`
-  as per-folder `log.md`, or an accepted incompatibility. **Open for a human decision.**
+- **Both source patterns prescribe `log.md`, at different strengths.** It is a **core**
+  convention in [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md) (part of the ingest
+  loop, machine-parseable prefixes) and an **optional** file in
+  [[Open Knowledge Format (OKF)]](open-knowledge-format.md). So `log.md` is more a Karpathy
+  signature than an OKF one.
+- **OKF compatibility never required this.** Because OKF makes `log.md` optional, our
+  earlier no-`log.md` setup was already OKF-compatible. We adopted `log.md` for **Karpathy
+  fidelity** and the practical value of a single, compact, machine-readable wiki changelog
+  — not for interop.
+- **What we deliberately did *not* do:** scatter a `log.md` into every folder (work/,
+  skills/, …). That strawman is neither Karpathy's nor OKF's actual pattern. One
+  wiki-level log, alongside `index.md`.
 
 ## Related
+- [[Semantic Wiki — changelog]](log.md) — the file this stance now mandates.
 - [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
 - [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md)
 - [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
 
 ## History
-- 2026-06-22 — Recorded during powernap; the divergence was flagged in two same-day
-  working notes (Karpathy, OKF). Surfaced to the user in the sleep report for a decision.
+- 2026-06-24 — **Resolved (reversal).** User decided to adopt a single wiki-level `log.md`
+  for Karpathy fidelity. Clarified that `log.md` is a *core* Karpathy convention but only
+  *optional* in OKF (correcting an earlier framing), so OKF interop never depended on it.
+  Created `memory/semantic/log.md` and wired `sleep` to maintain it. Page reframed from
+  "we omit log.md" to "we adopted a wiki-level log.md"; filename kept for link stability.
+- 2026-06-22 — Recorded during powernap as a deliberate omission; the divergence was
+  flagged in two same-day working notes (Karpathy, OKF) and surfaced for a decision.

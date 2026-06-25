@@ -29,9 +29,10 @@ store. "Folder = state." The same principle drives both halves of our design: kn
 - **How our brain splits it:** Karpathy/OKF ≈ `memory/semantic/` (the wiki, cyclic and
   native); ICM ≈ `workflows/` (staged, Verify-gated, and *scoped to that folder only*).
   Our Ingest/Query/Lint ≈ `sleep` / `start-work-session` / `deep-sleep`.
-- **Where we diverge:** see [[No log.md — our stance]](no-logmd-stance.md) — Karpathy and
-  OKF both bless an append-only `log.md`; we deliberately use dated `episodic/` + digest
-  `reports/` instead.
+- **On `log.md`:** see [[log.md — our stance (resolved)]](no-logmd-stance.md) — we adopted
+  a single wiki-level `log.md` ([[Semantic Wiki — changelog]](log.md), Karpathy-style) for
+  knowledge-base changes, *alongside* (not instead of) dated `episodic/` + digest
+  `reports/`, which serve the whole-life audit and digest jobs.
 - **Older root:** Vannevar Bush's Memex (1945) — the LLM solves the human maintenance
   burden Memex couldn't.
 
@@ -39,7 +40,8 @@ store. "Folder = state." The same principle drives both halves of our design: kn
 - [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md)
 - [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
 - [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md)
-- [[No log.md — our stance]](no-logmd-stance.md)
+- [[log.md — our stance (resolved)]](no-logmd-stance.md)
+- [[Semantic Wiki — changelog]](log.md)
 
 ## History
 - 2026-06-22 — Synthesized during powernap from the three same-day working notes.
