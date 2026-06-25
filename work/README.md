@@ -35,6 +35,12 @@ new item-folder → tasks/ or alerts/
 ```
 Lineage is the `mission:` link in the item's content file.
 
+**Deliverables don't flow with the item.** A work item is *process state* — it ends in
+`archived/<date>/`. Any durable output (a prototype, document, dataset, site) lives in
+`projects/<slug>/` instead, and the content file records an `output: projects/<slug>/`
+pointer. So only the lightweight record gets archived; the artifact stays findable in
+`projects/`. (See `projects/README.md`.)
+
 ## Claiming work (multi-agent safe)
 An item waiting in `tasks/`/`alerts/` is **lock-free**. To take it:
 1. Atomically create the lock: `mkdir work/tasks/<id>/.lock` (fails if it exists — the

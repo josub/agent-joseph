@@ -17,17 +17,27 @@ For each item in `memory/working/`:
 - append an episodic entry to `memory/episodic/<today>.md` (what the note was);
 - integrate its facts into `memory/semantic/` (one concept per file; **dedup by
   `source`**; **supersede, don't delete** — append to `## History`); update
-  `index.md`;
+  `index.md`; **append a changelog entry to `memory/semantic/log.md`** — one line per
+  page touched: `## [<today>] <ingest|update|supersede> | <Page Title>` + a one-line
+  note (append at the bottom; never edit/reorder past entries);
 - then **move** the item to `memory/archive/<today>/` (do **not** delete).
 
 ### 2. Sweep completed work
 For each item in `work/completed/`:
 - append an episodic entry ("did X");
-- extract reusable knowledge into `semantic/`, **cited to the item**;
+- extract reusable knowledge into `semantic/`, **cited to the item** (and append the
+  matching `memory/semantic/log.md` changelog line, as in step 1);
 - move the whole folder to `work/archived/<today>/`.
 Completed **workflow runs** are swept the same way — their `stages/` outputs are part
 of the provenance. If a same-named item already sits in today's archive folder, append
 a numeric suffix (the only place archived names are de-duped).
+
+**Durable deliverables are not swept.** They live in `projects/<slug>/` (see
+`projects/README.md`), outside the work item, so archiving moves only the lightweight
+record. If an item has an `output:` pointer, just confirm the pointer resolves before
+moving; if a finished item left a real deliverable *inside* its folder, relocate it to
+`projects/<slug>/` and add the `output:` pointer first, then archive the record.
+`projects/` itself is never archived or pruned.
 
 ### 3. Detect patterns (gated growth)
 Where a repeated activity suggests a reusable ability or habit:

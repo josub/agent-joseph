@@ -25,6 +25,11 @@ the agent's self-modification (drafts) through explicit user decisions.
    - **edit-then-keep** → let the user edit, then promote.
    Promoting a skill ≠ scheduling it: wiring a routine/stage to call it is a **separate**
    confirmation (move the routine to `routines/active/`).
+   After all drafts are processed, **if any were promoted, run
+   `scripts/sync-claude-skills.sh`** so the new skill is exposed to Claude Code's native
+   discovery (`.claude/skills/`) **immediately** — don't make the user wait for nightly
+   `sleep`. This is the sanctioned mechanism; never hand-author the links. Pure discards
+   need no sync (a `draft_` was never exposed).
 3. **Set focus.** Read `work/missions/` to choose today's mission(s) in focus, then pull
    priorities by handing off to / mirroring `start-work-session` (the open set ranked).
 4. **Write** `memory/reports/latest/morning-report.md` from the

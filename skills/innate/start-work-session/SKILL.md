@@ -58,6 +58,13 @@ defers execution to a human can skip it.
     **suggest `workflow-creator`**. **If unsure whether it qualifies, ask the user.**
   - **Otherwise** (single-cycle, or one-off) → just do the task in-session.
 
+**Durable deliverables go to `projects/`, not the work item.** Whichever route runs, any
+output worth keeping (a prototype, document, dataset, site) is laid down in
+`projects/<project-slug>/` and the work item's content file gets an `output: projects/<slug>/`
+pointer. The work item flows on to `completed/` then `archived/<date>/` carrying only the
+record + pointer — the artifact stays in `projects/` where it's always findable. See
+`projects/README.md`.
+
 ### 6. Losing the claim
 If the `.lock` create fails, another agent took it between selection and claim. The
 loser never moves the folder, and recovers by who made the choice:

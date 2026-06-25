@@ -20,10 +20,11 @@ hard Rules). Current goals are **not** there; they live in `work/missions/`.
 | Semantic ("what I know") | `memory/semantic/` | Concept wiki + `type: convention` refs. Read `index.md` first. |
 | Daily digests | `memory/reports/` | `latest/` = current cycle; rolled to dated folders. |
 | Prospective ("what to do") | `work/` | missions (persistent) + tasks/alerts (flowing). |
+| Output / craft ("what I made") | `projects/` | Durable deliverables, one folder per project. **Never flows**; work items point here via `output:`. |
 | Procedural — abilities | `skills/` | `innate/` (ships) + learned themes. **No triggers.** |
 | Procedural — habits | `routines/` | trigger → skill bindings. `active/` vs `inactive/`. |
 | Procedural — multi-stage | `workflows/` | Reusable staged procedures. **ICM applies here only.** |
-| Native skill exposure | `.claude/skills/` | Generated symlinks so Claude Code sees the brain's skills (excl. `draft_`/`_*` templates; anchors included). Synced by `scripts/sync-claude-skills.sh` (nightly via `sleep`). |
+| Native skill exposure | `.claude/skills/` | Generated symlinks so Claude Code sees the brain's skills (excl. `draft_`/`_*` templates; anchors included). Synced by `scripts/sync-claude-skills.sh` (nightly via `sleep`, and on-promotion via `morning-review`). |
 | Scheduling entry | `scripts/run-routine.sh` | Honors `.paused`. Cron/launchd opt-in. |
 
 Three classes of procedural memory: **skills** (single abilities, no triggers),
@@ -83,11 +84,20 @@ and take **no** consequential or outbound action on their own — a human acts l
 - **Claim before work** — each work item is a folder; claim it with an atomic `.lock`
   inside it (before moving to `ongoing/`) plus a `claimed_by`/`claimed_at` frontmatter
   stamp, so a fleet never double-works an item. (See `work/README.md`.)
+- **Deliverable ≠ work item** — durable output lives in `projects/<slug>/` (one folder per
+  project), **not** inside the work item. The work item carries an `output:` pointer and
+  flows on to `archived/<date>/` with only its record; the artifact stays put in `projects/`
+  (never archived, never pruned), so it's always findable without knowing an archive date.
+  Pointer, not copy. (See `projects/README.md`.)
 - **Plain markdown**, git is the substrate.
 - **Semantic memory:** one required field (`type`); **dedup by `source`**; **supersede,
   don't delete**. Given reference config (voice/style/design) lives here as
   `type: convention`.
-- **Episodic = raw dated log/audit; reports = synthesized daily digests.** No `log.md`.
+- **Episodic = raw dated log/audit; reports = synthesized daily digests.** The semantic
+  wiki additionally keeps one **wiki-level** `memory/semantic/log.md` — an append-only,
+  machine-parseable changelog of knowledge-base changes (Karpathy-style `## [date] action
+  | Title`), maintained by `sleep`/`deep-sleep` alongside `index.md`. No *per-folder*
+  `log.md` anywhere else. (See `semantic/no-logmd-stance.md`.)
 - **Skills are pure** (no triggers); **routines own triggers**; **workflow stages invoke
   skills**.
 - **Innate vs learned skills** — innate ship in `skills/innate/`; learned acquired under
@@ -98,8 +108,9 @@ and take **no** consequential or outbound action on their own — a human acts l
   inert `draft_` skills (guardrail 6) and templates (`_*`). Scheduled anchors (`sleep`,
   `morning-review`, `start-work-session`) **are** exposed — they keep running on the
   `run-routine.sh`/cron path and can also be invoked manually. **`sleep` runs the sync
-  nightly** (step 5), so promoted/new skills surface and stale links are pruned
-  automatically; never hand-edit the links.
+  nightly** (step 5) and **`morning-review` runs it the moment it promotes a draft**, so
+  promoted/new skills surface (immediately on promotion, else by next morning) and stale
+  links are pruned automatically; never hand-edit the links.
 - **ICM is scoped** — it governs `workflows/` only; the rest stays cyclic and native.
 - **Workflow definition ≠ run** — definition in `workflows/` (factory, stable); a run is
   a work item in `work/` (the product). Inputs are **pointers, not copies** (resolved by

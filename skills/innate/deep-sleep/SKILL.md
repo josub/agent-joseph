@@ -18,7 +18,9 @@ occasionally.
    - broken `[[links]]` / relative links;
    - missing pages referenced but never created.
 2. **Rebuild `index.md`** from scratch (one section per type/category); repair
-   cross-links; **propose merges** for duplicates (don't silently merge content).
+   cross-links; **propose merges** for duplicates (don't silently merge content). After
+   the pass, append one `## [<today>] lint | <summary>` line to `memory/semantic/log.md`
+   (append-only; record any superseded/merged pages there too).
 3. **Apply safe fixes** (fix a broken link, add a missing index line). **Route anything
    ambiguous to the report** rather than auto-resolving — supersede, never delete.
 4. **Write** `memory/reports/latest/deep-sleep-report.md` listing what was fixed and
