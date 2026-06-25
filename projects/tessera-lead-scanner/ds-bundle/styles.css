@@ -1,0 +1,108 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TESSERA — design-system entry stylesheet.
+
+   Anthropic-like warm-canvas editorial system: tinted cream canvas, serif
+   display headlines, warm coral CTAs, dark-navy product surfaces.
+
+   This is the entry point a rendered design receives — everything below is
+   reachable through this file's @import closure: fonts, color tokens, type
+   scale, spacing + radius. Read these imported files for the full token
+   vocabulary before styling.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import "./fonts/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+
+/* — Base — anchor on cream canvas with warm off-black ink — */
+:root { color-scheme: light; }
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* — Headings default to the serif display voice — */
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; color: var(--color-ink); }
+h1 { font-size: var(--text-display-xl); line-height: 1.05; letter-spacing: -1.5px; }
+h2 { font-size: var(--text-display-lg); line-height: 1.1;  letter-spacing: -1px;   }
+h3 { font-size: var(--text-display-md); line-height: 1.15; letter-spacing: -0.5px; }
+
+code, pre, kbd { font-family: var(--font-mono); }
+
+/* — Inline coral link, the system's signature small detail — */
+a { color: var(--color-coral); text-decoration: none; }
+a:active { text-decoration: underline; }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   SURFACE HELPERS — the three-tone surface system. Alternate bands; never
+   repeat the same surface mode in two consecutive bands.
+   ─────────────────────────────────────────────────────────────────────────── */
+.surface-canvas { background: var(--color-canvas);      color: var(--color-ink); }
+.surface-soft   { background: var(--color-surface-soft); color: var(--color-ink); }
+.surface-card   { background: var(--color-surface-card); color: var(--color-ink); }
+.surface-dark   { background: var(--color-dark);         color: var(--color-on-dark); }
+.surface-coral  { background: var(--color-coral);        color: var(--color-on-primary); }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   PRIMITIVE PATTERNS — minimal, token-driven. Generic components styled with
+   these read on-brand. Compose freely; these are reference idioms, not a
+   locked component set.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-sans); font-size: var(--text-button); font-weight: 500; line-height: 1;
+  padding: 12px 20px; min-height: 40px; border-radius: var(--radius-md);
+  border: 0; cursor: pointer; transition: background-color .15s ease;
+}
+.btn-primary   { background: var(--color-coral);  color: var(--color-on-primary); }
+.btn-primary:active   { background: var(--color-coral-active); }
+.btn-primary:disabled { background: var(--color-coral-disabled); color: var(--color-muted); cursor: default; }
+.btn-secondary { background: var(--color-canvas); color: var(--color-ink); border: 1px solid var(--color-hairline); }
+.btn-on-dark   { background: var(--color-dark-elevated); color: var(--color-on-dark); }
+.btn-icon {
+  width: 36px; height: 36px; padding: 0; border-radius: var(--radius-pill);
+  background: var(--color-canvas); color: var(--color-ink); border: 1px solid var(--color-hairline);
+}
+
+/* Cards */
+.card {
+  background: var(--color-surface-card); color: var(--color-ink);
+  border-radius: var(--radius-lg); padding: var(--space-xl);
+}
+.card-dark { background: var(--color-dark); color: var(--color-on-dark); border-radius: var(--radius-lg); padding: var(--space-xl); }
+.card-coral { background: var(--color-coral); color: var(--color-on-primary); border-radius: var(--radius-lg); padding: var(--space-xxl); }
+
+/* Inputs */
+.input {
+  background: var(--color-canvas); color: var(--color-ink);
+  font-family: var(--font-sans); font-size: var(--text-body-md);
+  padding: 10px 14px; min-height: 40px; border-radius: var(--radius-md);
+  border: 1px solid var(--color-hairline); outline: none;
+}
+.input:focus { border-color: var(--color-coral); box-shadow: 0 0 0 3px rgba(204, 120, 92, 0.15); }
+
+/* Badges */
+.badge {
+  display: inline-flex; align-items: center;
+  background: var(--color-surface-card); color: var(--color-ink);
+  font-size: var(--text-caption); font-weight: 500;
+  padding: 4px 12px; border-radius: var(--radius-pill);
+}
+.badge-coral {
+  background: var(--color-coral); color: var(--color-on-primary);
+  font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: var(--radius-pill);
+}
+
+/* Hairline divider */
+.hairline { border: 0; border-top: 1px solid var(--color-hairline); }

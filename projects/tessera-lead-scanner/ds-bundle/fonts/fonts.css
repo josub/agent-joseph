@@ -1,0 +1,14 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Type pairing — editorial serif display + humanist sans body.
+
+   These are open substitutes for Anthropic's licensed faces:
+     • Newsreader      ← substitute for Copernicus / Tiempos Headline (serif display)
+     • Inter           ← substitute for StyreneB (humanist sans, body + UI)
+     • JetBrains Mono  ← code / monospace
+
+   Loaded from Google Fonts so designs render self-contained. To bundle the
+   fonts instead, drop the woff2 files beside this file and replace the @import
+   with @font-face rules — styles.css already reaches this file via its import
+   closure, so nothing else changes.
+   ─────────────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500&display=swap');

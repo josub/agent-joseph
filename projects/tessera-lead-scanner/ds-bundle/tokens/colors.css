@@ -1,0 +1,48 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   COLOR TOKENS — the Anthropic-like "Tessera" warm-canvas palette.
+
+   The trinity is cream + coral + dark navy. Anchor on cream canvas, reserve
+   coral for primary CTAs and full-bleed callouts, use dark navy for product
+   chrome / featured surfaces. Never introduce a fourth surface tone.
+   Reference these as var(--color-*); never inline hex.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* — Brand / accent — */
+  --color-coral:           #cc785c;  /* primary CTA, wordmark accent, coral callouts */
+  --color-coral-active:    #a9583e;  /* press / active-darker variant */
+  --color-coral-disabled:  #e6dfd8;  /* desaturated cream-tinted disabled state */
+  --color-teal:            #5db8a6;  /* sparse secondary accent (status dots) */
+  --color-amber:           #e8a55a;  /* small companion warm tone (badges, highlights) */
+
+  /* — Surfaces (light) — */
+  --color-canvas:          #faf9f5;  /* default page floor — tinted cream, NOT pure white */
+  --color-surface-soft:    #f5f0e8;  /* soft band backgrounds, dividers */
+  --color-surface-card:    #efe9de;  /* feature / content cards — one step darker than canvas */
+  --color-cream-strong:    #e8e0d2;  /* strongest cream — selected tabs, emphasized bands */
+
+  /* — Surfaces (dark navy) — */
+  --color-dark:            #181715;  /* dominant dark surface — product chrome, footer */
+  --color-dark-elevated:   #252320;  /* elevated cards inside dark bands */
+  --color-dark-soft:       #1f1e1b;  /* code-block backgrounds inside larger dark cards */
+
+  /* — Text — */
+  --color-ink:             #141413;  /* headlines + primary text — warm off-black */
+  --color-body-strong:     #252523;  /* emphasized paragraphs, lead text */
+  --color-body:            #3d3d3a;  /* default running text */
+  --color-muted:           #6c6a64;  /* sub-headings, breadcrumbs, secondary text */
+  --color-muted-soft:      #8e8b82;  /* captions, fine print */
+
+  /* — On-color text — */
+  --color-on-primary:      #ffffff;  /* text on coral */
+  --color-on-dark:         #faf9f5;  /* cream-tinted white on dark surfaces */
+  --color-on-dark-soft:    #a09d96;  /* secondary text on dark surfaces */
+
+  /* — Lines — */
+  --color-hairline:        #e6dfd8;  /* 1px border on cream surfaces */
+  --color-hairline-soft:   #ebe6df;  /* barely-visible same-band divider */
+
+  /* — Semantic — */
+  --color-success:         #5db872;
+  --color-warning:         #d4a017;
+  --color-error:           #c64545;
+}

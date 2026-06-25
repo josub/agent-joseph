@@ -1,0 +1,33 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   SPACING & RADIUS TOKENS.
+
+   Base unit 4px. Section rhythm 96px between major bands; card padding 32px.
+   Radius is hierarchical: md(8) buttons+inputs, lg(12) content/product cards,
+   xl(16) hero containers, pill for badges. Reference as var(--space-*) /
+   var(--radius-*).
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* — Spacing (4px base) — */
+  --space-xxs:     4px;
+  --space-xs:      8px;
+  --space-sm:     12px;
+  --space-md:     16px;
+  --space-lg:     24px;
+  --space-xl:     32px;   /* default card internal padding */
+  --space-xxl:    48px;   /* coral callout padding */
+  --space-section: 96px;  /* rhythm between major bands */
+
+  /* — Border radius — */
+  --radius-xs:    4px;
+  --radius-sm:    6px;
+  --radius-md:    8px;    /* buttons, inputs, category tabs */
+  --radius-lg:   12px;    /* content + product cards */
+  --radius-xl:   16px;    /* hero illustration container */
+  --radius-pill: 9999px;  /* badges, avatars, icon buttons */
+
+  /* — Layout — */
+  --container-max: 1200px; /* max centered content width */
+
+  /* — Elevation — color-block first, shadow rare — */
+  --shadow-soft: 0 1px 3px rgba(20, 20, 19, 0.08);
+}

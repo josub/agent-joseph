@@ -1,0 +1,7 @@
+{
+  "shape": "tokens-only",
+  "offScript": true,
+  "localDir": "./ds-bundle",
+  "readmeHeader": "ds-bundle/README.md",
+  "note": "This repo is a single UI prototype (prototype/index.html), not a buildable component library. There is no package.json, dist/, or Storybook, so the standard converter does not apply. We sync the design LANGUAGE only — tokens, fonts, and styling idioms — so the design agent renders generic components on-brand. Source of truth: prototype/index.html tailwind.config + the DESIGN-claude.md design doc at the repo root (../../DESIGN-claude.md)."
+}
