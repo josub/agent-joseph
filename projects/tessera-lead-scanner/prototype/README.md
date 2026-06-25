@@ -1,7 +1,7 @@
 # Tessera — lead scanner UI prototype
 
 A hi-fi, interactive prototype of a Shazam-style event-badge lead scanner, styled to the
-Anthropic-like design system in [`DESIGN-claude.md`](../../../../DESIGN-claude.md).
+Anthropic-like design system in [`DESIGN-claude.md`](../../../DESIGN-claude.md).
 
 ## Run it
 Open `index.html` in any modern browser — that's it. It's a single self-contained file

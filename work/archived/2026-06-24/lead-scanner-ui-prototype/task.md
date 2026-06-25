@@ -8,6 +8,7 @@ created: 2026-06-23T15:08:54+0900
 claimed_by: claude
 claimed_at: 2026-06-23T15:08:54+0900
 completed_at: 2026-06-23T15:30:00+0900
+output: projects/tessera-lead-scanner/   # deliverable lives here (moved out of the work item 2026-06-24)
 # workflow:           # set only on workflow runs — the workflow definition slug
 # run:                # set only on workflow runs — this run's id (usually the folder slug)
 # stage:              # set only on workflow runs — the next stage to execute, e.g. 02-copywrite
@@ -61,8 +62,11 @@ A single, dominant **"Scan"** button is the home screen — like Shazam's listen
   HTML/CSS/JS artifact.
 
 ## Delivered (2026-06-23)
-- **Artifact:** `prototype/index.html` — single self-contained React + Tailwind file,
-  opens in any browser. See `prototype/README.md` for run + design notes.
+- **Output location:** `projects/tessera-lead-scanner/` (deliverable moved here
+  2026-06-24 — work items point to `projects/`, they don't hold the artifact).
+- **Artifact:** `projects/tessera-lead-scanner/prototype/index.html` — single
+  self-contained React + Tailwind file, opens in any browser. See its `prototype/README.md`
+  for run + design notes.
 - **All five screens built & verified** end-to-end in headless Chrome (zero page errors).
   Screenshots in `prototype/screenshots/`.
 - **Product named "Tessera"** (a tessera = a Roman identity token/ticket — fits a badge
