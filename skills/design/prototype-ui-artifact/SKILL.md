@@ -44,17 +44,22 @@ which this skill follows but does not restate.
 6. **Verify by screenshot** (see recipe in Notes). Drive the installed Chrome with
    puppeteer-core, click through every screen, screenshot each, and read the PNGs back.
    Fix anything that doesn't render before declaring done.
-7. **Lay down the deliverable** in the work item: `prototype/index.html`, a short
+7. **Lay down the deliverable in `projects/<project-slug>/`** (the durable output store —
+   see `projects/README.md`), **not** in the work item: `prototype/index.html`, a short
    `prototype/README.md` (how to run + token/design notes), and `prototype/screenshots/`.
+   Then leave an `output: projects/<project-slug>/` pointer in the work item's content
+   file so the artifact survives the nightly archive sweep in a place you can always find.
 
 ## Notes
 # usually called by: ad hoc (user request) / a future design workflow stage
-- **DRAFT / inert** — created on user request 2026-06-23 after a one-off lead-scanner
-  prototype. Gated until `morning-review` promotes or discards it (guardrail 6); not
-  exposed to Claude Code while `draft_`.
-- **Design method is a separate concern** — see the working note
-  [[2026-06-23-design-system-prompt-saas]] (headed for `semantic/` as a `type: convention`
-  via `sleep`). This skill *references* it; it does not duplicate the philosophy.
+- **Promoted 2026-06-24 via `morning-review`** — created on user request 2026-06-23 after
+  the lead-scanner (Tessera) prototype, establishing the `design` theme. Native exposure
+  (`.claude/skills/`) refreshes at next `sleep` sync.
+- **Design method is a separate concern** — see the convention
+  [[Design Method — distinctive, brief-first UI]](../../../memory/semantic/design-method-distinctive-ui.md)
+  (consolidated into `semantic/` by `sleep` 2026-06-24). This skill *references* it; it does
+  not duplicate the philosophy. Companion knowledge:
+  [[Web UI Prototype Recipe]](../../../memory/semantic/web-ui-prototype-recipe.md).
 - **Babel gotcha (cost a debug cycle):** `@babel/standalone`'s React preset defaults to
   the *automatic* JSX runtime, which injects `import …/jsx-runtime` and dies in a classic
   `<script>` ("Cannot use import statement outside a module"). Fix: keep the JSX in a

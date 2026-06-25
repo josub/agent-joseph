@@ -28,7 +28,7 @@ with many cited points across sources); this is one resource → one structured 
 
 ## Notes
 # usually called by: ad hoc (user request); consolidated by sleep
-- **DRAFT / inert** — created autonomously by sleep on 2026-06-22 after three same-shape
-  captures in one day (Karpathy LLM wiki, Google OKF, Van Clief ICM paper). Gated until
-  `morning-review` promotes or discards it (guardrail 6). Not exposed to Claude Code.
+- **Promoted 2026-06-24 via `morning-review`.** Created autonomously by `sleep` on
+  2026-06-22 after three same-shape captures in one day (Karpathy LLM wiki, Google OKF,
+  Van Clief ICM paper). Native exposure (`.claude/skills/`) refreshes at next `sleep` sync.
 - Read-only on the world; never sends anything.
