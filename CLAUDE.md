@@ -90,6 +90,18 @@ and take **no** consequential or outbound action on their own — a human acts l
   (never archived, never pruned), so it's always findable without knowing an archive date.
   Pointer, not copy. (See `projects/README.md`.)
 - **Plain markdown**, git is the substrate.
+- **Saving a memory → `memory/working/`.** When working in this repo and you want to
+  persist a learning or fact, drop it into `memory/working/`; `sleep` consolidates it
+  into episodic/semantic. **Don't** use the Claude Code harness memory store
+  (`~/.claude/projects/.../memory/`) — Claude doesn't depend on it and it isn't
+  versioned, shared, or consolidated; this brain is the single source of truth.
+- **Working in an external repo (outside this brain):** the brain is the working
+  directory (skills + memory loaded), but a sibling repo's own config is **not**
+  auto-loaded. Before editing files there, read its **root** `CLAUDE.md`/`AGENTS.md`
+  **and any nested `CLAUDE.md` in subdirectories you touch**, and note its git remote +
+  default branch. Follow that repo's project conventions (build/test/commit, framework
+  rules) for code in it; the brain's safety guardrails (approval gate, never auto-send,
+  archive-not-delete) still apply on top.
 - **Semantic memory:** one required field (`type`); **dedup by `source`**; **supersede,
   don't delete**. Given reference config (voice/style/design) lives here as
   `type: convention`.
