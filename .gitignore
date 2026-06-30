@@ -3,6 +3,9 @@
 .env.local
 *.local
 
+# Personal Claude Code settings (machine-specific, not shared)
+.claude/settings.local.json
+
 # Runtime control files
 .paused
 
@@ -15,6 +18,16 @@ agent-brain-spec.md
 # OS / tooling cruft
 .DS_Store
 node_modules/
+
+# Machine-specific / runtime artifacts (not shared)
+# Playwright MCP runtime output
+.playwright-mcp/
+# Obsidian vault workspace state
+memory/.obsidian/
+# VS Code multi-root view (see dev-setup-dual-repo)
+*.code-workspace
+# Stray root-level QA screenshots; durable images live under projects/ or memory/
+/*.png
 
 # --- Tracked by default ---
 # work/archived/, memory/archive/, and memory/reports/ are committed so the
