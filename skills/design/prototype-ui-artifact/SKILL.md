@@ -56,10 +56,10 @@ which this skill follows but does not restate.
   the lead-scanner (Tessera) prototype, establishing the `design` theme. Native exposure
   (`.claude/skills/`) refreshes at next `sleep` sync.
 - **Design method is a separate concern** — see the convention
-  [[Design Method — distinctive, brief-first UI]](../../../memory/semantic/design-method-distinctive-ui.md)
+  [[design-method-distinctive-ui]]
   (consolidated into `semantic/` by `sleep` 2026-06-24). This skill *references* it; it does
   not duplicate the philosophy. Companion knowledge:
-  [[Web UI Prototype Recipe]](../../../memory/semantic/web-ui-prototype-recipe.md).
+  [[web-ui-prototype-recipe]].
 - **Babel gotcha (cost a debug cycle):** `@babel/standalone`'s React preset defaults to
   the *automatic* JSX runtime, which injects `import …/jsx-runtime` and dies in a classic
   `<script>` ("Cannot use import statement outside a module"). Fix: keep the JSX in a
