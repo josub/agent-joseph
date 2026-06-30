@@ -1,5 +1,7 @@
 {
   "shape": "tokens-only",
+  "projectId": "c888fa5e-255d-49f2-b401-3ff23100c872",
+  "projectName": "Lead Scanner",
   "offScript": true,
   "localDir": "./ds-bundle",
   "readmeHeader": "ds-bundle/README.md",

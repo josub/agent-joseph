@@ -1,4 +1,4 @@
-# Tessera — lead scanner UI prototype
+# Manna — lead scanner UI prototype
 
 A hi-fi, interactive prototype of a Shazam-style event-badge lead scanner, styled to the
 Anthropic-like design system in [`DESIGN-claude.md`](../../../DESIGN-claude.md).

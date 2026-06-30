@@ -1,4 +1,4 @@
-# Tessera design language — full reference
+# Manna design language — full reference
 
 Warm-canvas editorial system (Anthropic-like). Brand voltage comes from the
 **cream + coral** pairing — deliberately warm and humanist where most AI brands use

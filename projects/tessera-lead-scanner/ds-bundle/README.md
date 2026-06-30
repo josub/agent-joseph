@@ -1,4 +1,4 @@
-# Tessera — design system (tokens)
+# Manna — design system (tokens)
 
 A warm-canvas **editorial** design language (Anthropic-like): tinted cream canvas,
 serif display headlines, warm coral CTAs, dark-navy product surfaces. This is a

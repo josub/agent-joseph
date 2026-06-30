@@ -1,9 +1,9 @@
-# Tessera — lead-scanner UI prototype
+# Manna — lead-scanner UI prototype
 
 Hi-fi, interactive UI prototype for a Shazam-style event-badge / business-card lead
 scanner, styled to the Anthropic-like design system in
-[`DESIGN-claude.md`](../../DESIGN-claude.md). Product named **Tessera** (a Roman identity
-token — fits a badge scanner).
+[`DESIGN-claude.md`](../../DESIGN-claude.md). Product named **Manna** (working name; was
+"Tessera"). Folder slug `tessera-lead-scanner` retained for now.
 
 ## Where things are
 - **Deliverable:** [`prototype/index.html`](prototype/index.html) — a single

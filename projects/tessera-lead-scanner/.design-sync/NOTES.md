@@ -1,4 +1,4 @@
-# design-sync notes — Tessera
+# design-sync notes — Manna
 
 ## Repo shape (2026-06-25)
 - **Not a component-library repo.** It's a single self-contained UI prototype:
@@ -22,6 +22,22 @@ Newsreader (serif) + Inter (sans) + JetBrains Mono, loaded via Google Fonts `@im
 in `ds-bundle/fonts/fonts.css`. Substitutes for licensed Copernicus / StyreneB. To
 bundle instead, drop woff2 files beside `fonts.css` and swap the `@import` for
 `@font-face` — styles.css reaches it via the import closure either way.
+
+## Upload status — UPLOADED (2026-06-25)
+Pushed via `/design-login`-authorized `DesignSync`. Project **"Lead Scanner"**,
+`projectId` `c888fa5e-255d-49f2-b401-3ff23100c872`, pinned in `config.json`. All 7
+files live (verified via `list_files`).
+- Project URL: https://claude.ai/design/p/c888fa5e-255d-49f2-b401-3ff23100c872
+
+### Re-sync path (for future bundle changes)
+Now that a `projectId` is pinned, a later run is a **re-sync into the existing
+project**, not first-time creation:
+1. Authorize: `/design-login` (or `/login` with a Claude subscription).
+2. `DesignSync(list_files, projectId)` → structural diff vs `ds-bundle/`.
+3. `DesignSync(finalize_plan, projectId, localDir:"./ds-bundle", writes:["**/*"], deletes:[<removed paths>])`.
+4. `DesignSync(write_files)` changed files (7 files, 36K — single call is fine).
+No `_ds_sync.json` / sentinel needed — there are no components to verify, and the
+tokens-only bundle has no recompile step.
 
 ## Bundle layout (off-script)
 ```
