@@ -16,7 +16,7 @@ updated: <ISO>
 - ...
 
 ## Related
-- [[Other Concept]](other-concept.md)
+- [[other-concept]]
 
 ## History
 - <ISO date> — <what changed / what this superseded>

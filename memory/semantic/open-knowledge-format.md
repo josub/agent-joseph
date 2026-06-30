@@ -36,10 +36,10 @@ essentially the industry-standard version of our own brain.
   don't delete.
 
 ## Related
-- [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
-- [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md) — the pattern OKF formalizes.
-- [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md)
-- [[log.md — our stance (resolved)]](no-logmd-stance.md) — OKF lists `log.md` as optional; we adopted a wiki-level one (Karpathy fidelity), so we're fully OKF-compatible.
+- [[filesystem-as-agentic-architecture]]
+- [[llm-wiki-karpathy]] — the pattern OKF formalizes.
+- [[icm-folder-architecture]]
+- [[no-logmd-stance]] — OKF lists `log.md` as optional; we adopted a wiki-level one (Karpathy fidelity), so we're fully OKF-compatible.
 
 ## History
 - 2026-06-22 — Created from working note `2026-06-22-google-open-knowledge-format.md` during powernap.

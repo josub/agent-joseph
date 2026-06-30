@@ -18,30 +18,30 @@ store. "Folder = state." The same principle drives both halves of our design: kn
 
 ## Key points
 - **Three convergent sources (2026):**
-  - [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md) — the **memory** half: a
+  - [[llm-wiki-karpathy]] — the **memory** half: a
     persistent, LLM-maintained markdown wiki that compounds across sessions (vs RAG).
-  - [[Open Knowledge Format (OKF)]](open-knowledge-format.md) — the same memory pattern
+  - [[open-knowledge-format]] — the same memory pattern
     **formalized** into a vendor-neutral spec by Google Cloud.
-  - [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md) — the
+  - [[icm-folder-architecture]] — the
     **orchestration** half: numbered-folder stages replacing multi-agent frameworks.
 - **Shared DNA:** plain markdown, git as substrate, one required `type` field, `index.md`
   read first / progressive disclosure, `[[wiki-links]]`, supersede-don't-delete.
 - **How our brain splits it:** Karpathy/OKF ≈ `memory/semantic/` (the wiki, cyclic and
   native); ICM ≈ `workflows/` (staged, Verify-gated, and *scoped to that folder only*).
   Our Ingest/Query/Lint ≈ `sleep` / `start-work-session` / `deep-sleep`.
-- **On `log.md`:** see [[log.md — our stance (resolved)]](no-logmd-stance.md) — we adopted
-  a single wiki-level `log.md` ([[Semantic Wiki — changelog]](log.md), Karpathy-style) for
+- **On `log.md`:** see [[no-logmd-stance]] — we adopted
+  a single wiki-level `log.md` ([[log]], Karpathy-style) for
   knowledge-base changes, *alongside* (not instead of) dated `episodic/` + digest
   `reports/`, which serve the whole-life audit and digest jobs.
 - **Older root:** Vannevar Bush's Memex (1945) — the LLM solves the human maintenance
   burden Memex couldn't.
 
 ## Related
-- [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md)
-- [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
-- [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md)
-- [[log.md — our stance (resolved)]](no-logmd-stance.md)
-- [[Semantic Wiki — changelog]](log.md)
+- [[llm-wiki-karpathy]]
+- [[open-knowledge-format]]
+- [[icm-folder-architecture]]
+- [[no-logmd-stance]]
+- [[log]]
 
 ## History
 - 2026-06-22 — Synthesized during powernap from the three same-day working notes.

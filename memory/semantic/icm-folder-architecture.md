@@ -31,9 +31,9 @@ CLAUDE.md note "ICM is scoped — it governs `workflows/` only" refers to exactl
   `workflows/` only; the rest of the brain stays cyclic/native, not staged.
 
 ## Related
-- [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
-- [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md)
-- [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
+- [[filesystem-as-agentic-architecture]]
+- [[llm-wiki-karpathy]]
+- [[open-knowledge-format]]
 
 ## History
 - 2026-06-22 — Created from working note `2026-06-22-icm-paper-van-clief.md` during powernap.

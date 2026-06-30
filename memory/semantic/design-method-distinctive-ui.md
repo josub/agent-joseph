@@ -13,7 +13,7 @@ updated: 2026-06-24
 Our standing method for any product-UI work: act as a design lead who refuses templated
 output and makes deliberate, product-specific choices about palette, type, and layout —
 spending boldness in exactly one place. This is the **declarative reference** (the "how
-we design"); the engineering execution lives in [[Web UI Prototype Recipe]](web-ui-prototype-recipe.md)
+we design"); the engineering execution lives in [[web-ui-prototype-recipe]]
 and the procedural draft skill `prototype-ui-artifact`, both of which follow this method
 rather than restate it.
 
@@ -88,7 +88,7 @@ you'd cut and why. Keep planning/iteration mostly in thinking; surface to the us
 reasonable confidence.
 
 ## Related
-- [[Web UI Prototype Recipe]](web-ui-prototype-recipe.md) — the engineering execution of this method.
+- [[web-ui-prototype-recipe]] — the engineering execution of this method.
 - Draft skill `skills/design/draft_prototype-ui-artifact/` — procedural ability that follows this method (inert pending morning-review).
 
 ## History

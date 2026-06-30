@@ -38,10 +38,10 @@ articulation of our own brain's design.
   `deep-sleep`. Same `index.md`-first and `[[wiki-link]]` conventions.
 
 ## Related
-- [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
-- [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
-- [[ICM — Folder Structure as Agentic Architecture]](icm-folder-architecture.md)
-- [[log.md — our stance (resolved)]](no-logmd-stance.md) — we adopted Karpathy's wiki-level `log.md` (see [[Semantic Wiki — changelog]](log.md)).
+- [[filesystem-as-agentic-architecture]]
+- [[open-knowledge-format]]
+- [[icm-folder-architecture]]
+- [[no-logmd-stance]] — we adopted Karpathy's wiki-level `log.md` (see [[log]]).
 
 ## History
 - 2026-06-22 — Created from working note `2026-06-22-karpathy-llm-wiki.md` during powernap.

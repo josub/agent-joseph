@@ -26,9 +26,9 @@ synthesized digests (`memory/reports/`) are unchanged and serve different jobs.
 
 ## Key points
 - **Both source patterns prescribe `log.md`, at different strengths.** It is a **core**
-  convention in [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md) (part of the ingest
+  convention in [[llm-wiki-karpathy]] (part of the ingest
   loop, machine-parseable prefixes) and an **optional** file in
-  [[Open Knowledge Format (OKF)]](open-knowledge-format.md). So `log.md` is more a Karpathy
+  [[open-knowledge-format]]. So `log.md` is more a Karpathy
   signature than an OKF one.
 - **OKF compatibility never required this.** Because OKF makes `log.md` optional, our
   earlier no-`log.md` setup was already OKF-compatible. We adopted `log.md` for **Karpathy
@@ -39,10 +39,10 @@ synthesized digests (`memory/reports/`) are unchanged and serve different jobs.
   wiki-level log, alongside `index.md`.
 
 ## Related
-- [[Semantic Wiki — changelog]](log.md) — the file this stance now mandates.
-- [[Filesystem as Agentic Architecture]](filesystem-as-agentic-architecture.md)
-- [[LLM Wiki (Andrej Karpathy)]](llm-wiki-karpathy.md)
-- [[Open Knowledge Format (OKF)]](open-knowledge-format.md)
+- [[log]] — the file this stance now mandates.
+- [[filesystem-as-agentic-architecture]]
+- [[llm-wiki-karpathy]]
+- [[open-knowledge-format]]
 
 ## History
 - 2026-06-24 — **Resolved (reversal).** User decided to adopt a single wiki-level `log.md`

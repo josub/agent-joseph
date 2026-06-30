@@ -13,7 +13,7 @@ updated: 2026-06-24
 The engineering execution for turning a design brief into a runnable, hi-fi prototype: a
 single `index.html` with no build step, styled to a supplied token doc, proven to render
 via headless-browser screenshots. This is the *how-to-build*; the *how-to-design* is
-[[Design Method — distinctive, brief-first UI]](design-method-distinctive-ui.md). Keep the two
+[[design-method-distinctive-ui]]. Keep the two
 separate — method and engineering recipe are distinct concerns.
 
 ## The single-file React + Tailwind recipe
@@ -62,7 +62,7 @@ separate — method and engineering recipe are distinct concerns.
   `prototype/screenshots/` inside the work item.
 
 ## Related
-- [[Design Method — distinctive, brief-first UI]](design-method-distinctive-ui.md) — the design method this recipe executes.
+- [[design-method-distinctive-ui]] — the design method this recipe executes.
 - Draft skill `skills/design/draft_prototype-ui-artifact/` — the procedural form of this recipe (inert pending morning-review).
 
 ## History
